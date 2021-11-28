@@ -15,11 +15,6 @@ def askFileName():
     return fileNames
 
 def buildRDD(fileNames):
-    # TODO: 1. local -> GCP bucket
-    #       2. GCP bucket -> cluster
-    #       3. cluster -> hadoop
-    #       2. call RDD.py
-    fileNames = ["Hugo", "shakespeare", "Tolstoy"]
     if os.path.exists("fileList.txt"):
         os.remove("fileList.txt")
     sys.stdout = open("fileList.txt", "w")
@@ -31,13 +26,10 @@ def buildRDD(fileNames):
     sys.stdout.close()
     sys.stdout = sys.__stdout__
 
-    # 1. local -> GCP bucket
+    # local -> GCP bucket
 
-    # 2. GCP -> cluster
 
-    # 3. cluster -> hadoop
-
-    # 4. call RDD.py
+    # call RDD.py
     os.system("gcloud dataproc jobs submit pyspark gs://dataproc-staging-us-west1-127099418400-2p0asb0o/RDD.py --files=gs://dataproc-staging-us-west1-127099418400-2p0asb0o/fileList.txt --cluster=cluster-1159 --region=us-west1")
     print("build inverted indicies successful")
     return True

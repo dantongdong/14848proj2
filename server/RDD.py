@@ -11,7 +11,7 @@ files = sc.textFile("gs://dataproc-staging-us-west1-127099418400-2p0asb0o/fileLi
 allFile = files.collect()
 for filePath in allFile:
     try:
-        words = sc.textFile('///user/dantongdong310/' + filePath).flatMap(lambda line: line.split(" ")).filter(lambda word: word not in stopWords)
+        words = sc.textFile('gs://dataproc-staging-us-west1-127099418400-2p0asb0o/' + filePath).flatMap(lambda line: line.split(" ")).filter(lambda word: word not in stopWords)
         wordCounts = words.map(lambda word: (word, 1)).reduceByKey(lambda a, b: a + b)
         # terms
         if not topN:
