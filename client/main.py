@@ -1,4 +1,5 @@
 import os
+import sys
 # ==================== start BUILD RDD ================================
 
 def displayUploadPrompt():
@@ -18,7 +19,17 @@ def buildRDD(fileNames):
     #       2. GCP bucket -> cluster
     #       3. cluster -> hadoop
     #       2. call RDD.py
-    # fileNames = ["Hugo", "shakespeare", "Tolstoy"]
+    fileNames = ["Hugo", "shakespeare", "Tolstoy"]
+    if os.path.exists("fileList.txt"):
+        os.remove("fileList.txt")
+    sys.stdout = open("fileList.txt", "w")
+    for root, dirs, files in os.walk('../Data', topdown=True):
+        root = root[3:]
+        for file in files:
+            filePath = root + '/' + file
+            print(filePath)
+    sys.stdout.close()
+    sys.stdout = sys.__stdout__
 
     # 1. local -> GCP bucket
 
@@ -27,7 +38,7 @@ def buildRDD(fileNames):
     # 3. cluster -> hadoop
 
     # 4. call RDD.py
-    os.system("gcloud dataproc jobs submit pyspark gs://dataproc-staging-us-west1-127099418400-2p0asb0o/RDD.py --cluster=cluster-1159 --region=us-west1")
+    os.system("gcloud dataproc jobs submit pyspark gs://dataproc-staging-us-west1-127099418400-2p0asb0o/RDD.py --files=gs://dataproc-staging-us-west1-127099418400-2p0asb0o/fileList.txt --cluster=cluster-1159 --region=us-west1")
     print("build inverted indicies successful")
     return True
 # ==================== end BUILD RDD ================================
