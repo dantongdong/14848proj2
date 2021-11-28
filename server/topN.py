@@ -15,6 +15,6 @@ def parse(line):
     return (key, value)
 
 
-words = sc.textFile('topN/part-*').map(lambda x: parse(x))
+words = sc.textFile('///user/dantongdong310/topN/part-*').map(lambda x: parse(x))
 for word in words.take(N):
     print(word)

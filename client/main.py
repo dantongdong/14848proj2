@@ -1,31 +1,33 @@
-
+import os
 # ==================== start BUILD RDD ================================
 
 def displayUploadPrompt():
     print("Welcome to Search Engine Application")
-    print("Please type in your files name or type END to finish")
-
-def isValid(userInput):
-    # TODO: implement isValid function
-    # if userInput is a valid file path
-    return True
+    print("Please type in your files name or type UPLOAD to upload")
 
 def askFileName():
     fileNames = []
     userInput = None
-    while userInput != "END":
+    while userInput != "UPLOAD":
         userInput = input("Add your files name here > ")
-        if isValid(userInput):
-            fileNames.append(userInput)
-        else:
-            userInput = input("Your file is not valid, please enter again > ")
-    return userInput
+        fileNames.append(userInput)
+    return fileNames
 
 def buildRDD(fileNames):
-    # TODO: 1. Upload file to GCP (optional)
-    #       2. submit GCP pyspark job to build RDD
-    #       3. store RDD in GCP cluster
-    # fileNames = ["dir1/file", "dir2/file2", "dir3/file3"]
+    # TODO: 1. local -> GCP bucket
+    #       2. GCP bucket -> cluster
+    #       3. cluster -> hadoop
+    #       2. call RDD.py
+    # fileNames = ["Hugo", "shakespeare", "Tolstoy"]
+
+    # 1. local -> GCP bucket
+
+    # 2. GCP -> cluster
+
+    # 3. cluster -> hadoop
+
+    # 4. call RDD.py
+    os.system("gcloud dataproc jobs submit pyspark gs://dataproc-staging-us-west1-127099418400-2p0asb0o/RDD.py --cluster=cluster-1159 --region=us-west1")
     print("build inverted indicies successful")
     return True
 # ==================== end BUILD RDD ================================
@@ -36,6 +38,7 @@ def displayAppPrompt():
     print("Please Select Action:")
     print("1. Search for Term")
     print("2. Top-N")
+    print("3. Back to file upload")
 
 def askAppNumber():
     while True:
@@ -43,20 +46,24 @@ def askAppNumber():
             number = int(input("Please type the number that corresponds here > "))
             if number not in [1, 2, 3]:
                 raise ValueError
+            return number
         except ValueError:
             print("Invalid number selection")
             continue
 
 def handleAppNumber(number):
     if number == 1: # search for term
-        pass
+        searchForTerm()
     elif number == 2: # top N
-        pass
+        topN()
 
 def searchForTerm():
     term = input("Please enter your search term > ")
-    # TODO: submit GCP pyspark job on RDD
+    os.system("gcloud dataproc jobs submit pyspark gs://dataproc-staging-us-west1-127099418400-2p0asb0o/searchTerm.py --cluster=cluster-1159 --region=us-west1 -- " + term)
 
+def topN():
+    N = input("Please enter your N value > ")
+    os.system("gcloud dataproc jobs submit pyspark gs://dataproc-staging-us-west1-127099418400-2p0asb0o/topN.py --cluster=cluster-1159 --region=us-west1 -- " + N)
 
 # ==================== end Application Selection ==================
 
@@ -68,8 +75,11 @@ while True:
     if not buildSuccess:
         continue
     # 2. select action
-    displayUploadPrompt()
-    number = askAppNumber()
+    number = 0
+    while number != 3:
+        displayAppPrompt()
+        number = askAppNumber()
+        handleAppNumber(number)
 
 
 

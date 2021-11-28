@@ -14,7 +14,6 @@ def parse(line):
     value = line[1][1: len(line[1])-1]
     return (key, value)
 
-
-words = sc.textFile('searchTerm/part-*').map(lambda x: parse(x)).lookup(term)
+words = sc.textFile('///user/dantongdong310/searchTerm/part-*').map(lambda x: parse(x)).lookup(term)
 for word in words:
     print(term + " " + word)
