@@ -1,5 +1,6 @@
 import os
 import sys
+from google.cloud import storage
 # ==================== start BUILD RDD ================================
 
 def displayUploadPrompt():
@@ -15,18 +16,27 @@ def askFileName():
     return fileNames
 
 def buildRDD(fileNames):
+    bucket = storage.Client.from_service_account_json('credential.json').get_bucket("dataproc-staging-us-west1-127099418400-2p0asb0o")
+
     if os.path.exists("fileList.txt"):
         os.remove("fileList.txt")
     sys.stdout = open("fileList.txt", "w")
-    for root, dirs, files in os.walk('../Data', topdown=True):
-        root = root[3:]
-        for file in files:
-            filePath = root + '/' + file
-            print(filePath)
+
+    for fileName in fileNames:
+        #fileName = "///Users/dantongdong/Desktop/Cloud_Infra/14848proj2/Data/Hugo"
+        index = len(fileName) - len(fileName.split("/")[-1])
+        for root, dirs, files in os.walk(fileName, topdown=True):
+            parsed_root = root[index:]
+            for file in files:
+                filePath = 'Data/' + parsed_root + '/' + file
+                print(filePath)
+                blob = bucket.blob(filePath)
+                blob.upload_from_filename(root+'/'+file)
     sys.stdout.close()
     sys.stdout = sys.__stdout__
 
-    # local -> GCP bucket
+    blob = bucket.blob("fileList.txt")
+    blob.upload_from_filename("fileList.txt")
 
 
     # call RDD.py
@@ -41,13 +51,12 @@ def displayAppPrompt():
     print("Please Select Action:")
     print("1. Search for Term")
     print("2. Top-N")
-    print("3. Back to file upload")
 
 def askAppNumber():
     while True:
         try:
             number = int(input("Please type the number that corresponds here > "))
-            if number not in [1, 2, 3]:
+            if number not in [1, 2]:
                 raise ValueError
             return number
         except ValueError:
@@ -78,8 +87,7 @@ while True:
     if not buildSuccess:
         continue
     # 2. select action
-    number = 0
-    while number != 3:
+    while True:
         displayAppPrompt()
         number = askAppNumber()
         handleAppNumber(number)

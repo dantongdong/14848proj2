@@ -1,8 +1,5 @@
-Data/.DS_Store
 Data/Hugo/NotreDame_De_Paris.txt
 Data/Hugo/Miserables.txt
-Data/Tolstoy/war_and_peace.txt
-Data/Tolstoy/anna_karenhina.txt
 Data/shakespeare/.DS_Store
 Data/shakespeare/README
 Data/shakespeare/glossary
@@ -48,3 +45,5 @@ Data/shakespeare/histories/3kinghenryvi
 Data/shakespeare/histories/kinghenryviii
 Data/shakespeare/histories/kinghenryv
 Data/shakespeare/histories/kingrichardiii
+Data/Tolstoy/war_and_peace.txt
+Data/Tolstoy/anna_karenhina.txt
