@@ -23,7 +23,7 @@ def buildRDD(fileNames):
     sys.stdout = open("fileList.txt", "w")
 
     for fileName in fileNames:
-        #fileName = "///Users/dantongdong/Desktop/Cloud_Infra/14848proj2/Data/Hugo"
+        #fileName = "Data/Hugo"
         index = len(fileName) - len(fileName.split("/")[-1])
         for root, dirs, files in os.walk(fileName, topdown=True):
             parsed_root = root[index:]
@@ -31,7 +31,7 @@ def buildRDD(fileNames):
                 filePath = 'Data/' + parsed_root + '/' + file
                 print(filePath)
                 blob = bucket.blob(filePath)
-                blob.upload_from_filename(root+'/'+file)
+                blob.upload_from_filename(root + '/' + file)
     sys.stdout.close()
     sys.stdout = sys.__stdout__
 
@@ -78,7 +78,9 @@ def topN():
     os.system("gcloud dataproc jobs submit pyspark gs://dataproc-staging-us-west1-127099418400-2p0asb0o/topN.py --cluster=cluster-1159 --region=us-west1 -- " + N)
 
 # ==================== end Application Selection ==================
-
+# docker run -v ///Users/dantongdong/Desktop/Cloud_Infra/14848proj2/Data:/Data -it d5a1becbb6ac
+os.system("gcloud config set project iron-cycle-327606")
+os.system("gcloud auth login")
 while True:
     # 1. build RDD
     displayUploadPrompt()
