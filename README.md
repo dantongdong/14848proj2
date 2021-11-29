@@ -1,7 +1,7 @@
 # 14848proj2 - Mini Search Engine
 
 ### Video code walk through
-here
+https://youtu.be/OO150YH5oXM
 
 ### Client Side
 client side application (all source code available under client folder): https://hub.docker.com/repository/docker/dantongdong/minisearch
